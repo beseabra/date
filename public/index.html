@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convite para Sair</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Etapa inicial com a imagem do convite -->
+  <div id="step-0">
+    <h1>Clique para abrir o convite</h1>
+    <img id="inviteImage" src="images/convite.gif" alt="Convite" />
+  </div>
+
+  <!-- Etapa 1: Pergunta 1 -->
+  <div id="step-1" class="step" style="display: none;">
+    <div>
+      <p class="romantic-message">Oi, Gio! O Natal está chegando e o melhor presente é a sua companhia. 🌟</p>
+    </div>
+    <img class="image" src="images/pergunta1.png" alt="Pergunta 1" />
+    <form id="form-step-1">
+      <p>Quer sair comigo?</p>
+      <input type="radio" name="invite" value="Sim" required> Sim<br>
+      <input type="radio" name="invite" value="Não" required> Não<br><br>
+      <button class="button" type="submit">Próximo</button>
+    </form>
+  </div>
+
+  <!-- Etapa 2: Pergunta 2 -->
+  <div id="step-2" class="step" style="display: none;">
+    <h1>Trouxe algumas opções:</h1>
+    <figure>
+        <img class="image" src="images/convite1.png" alt="Pergunta 2" />
+        <figcaption>Opção 1 - Petrópolis fica ainda mais linda no Natal! Que tal passearmos por aqui e aproveitar a noite juntos? 🎄✨</figcaption>
+      </figure>
+      
+      <figure>
+        <img class="image" src="images/convite2.png" alt="Pergunta 2" />
+        <figcaption>Opção 2 - Que tal um barzinho em Juiz de Fora para relaxar e curtir a noite? Podemos terminar o dia juntinhos. 🍹✨</figcaption>
+      </figure>
+      <form id="form-step-2">
+        <select name="location" id="location" required>
+          <option value="Opção1">Opção 1</option>
+          <option value="Opção2">Opção 2</option>
+          <option value="Outro">Outra sugestão</option>
+        </select><br><br>
+        <div id="custom-suggestion" style="display: none;">
+          <label for="custom-input">Qual sua sugestão?</label><br>
+          <input type="text" id="custom-input" name="customSuggestion" /><br><br>
+        </div>
+        <button class="button" type="submit">Próximo</button>
+      </form>
+  </div>
+
+  <!-- Etapa 3: Pergunta 3 -->
+  <div id="step-3" class="step" style="display: none;">
+    <img class="image" src="images/pergunta3.png" alt="Pergunta 3" />
+    <p>Que bom que você chegou até aqui, qual melhor data a partir do dia 19/12?</p>
+    <form id="form-step-3">
+      <input type="date" name="date" id="date-input" required><br><br>
+      <button class="button" type="submit">Enviar</button>
+    </form>
+  </div>
+
+  <!-- Resposta final -->
+  <div id="response" style="display: none;"></div>
+
+  <script>
+    const steps = document.querySelectorAll(".step");
+    const inviteImage = document.getElementById("inviteImage");
+
+    // Objeto para armazenar as respostas
+    const userResponses = {};
+
+    // Número do WhatsApp (inclua o DDD no formato internacional, sem o "+")
+    const whatsappNumber = "5543999898143";
+
+    // Etapa inicial: clique no convite
+    inviteImage.addEventListener("click", () => {
+      document.getElementById("step-0").style.display = "none";
+      showStep(1);
+    });
+
+    // Função para exibir uma etapa específica
+    function showStep(stepNumber) {
+      steps.forEach((step, index) => {
+        step.style.display = index === stepNumber - 1 ? "block" : "none";
+      });
+    }
+
+    // Função para ocultar todo o conteúdo e exibir apenas a mensagem final
+    function hideAllAndShowMessage(message) {
+      document.body.innerHTML = `<div style="text-align:center; margin-top:50px;"><p>${message}</p></div>`;
+    }
+
+    // Manipular a exibição do campo de sugestão personalizado na etapa 2
+    const locationSelect = document.getElementById('location');
+    const customSuggestion = document.getElementById('custom-suggestion');
+
+    locationSelect.addEventListener('change', function () {
+      if (this.value === 'Outro') {
+        customSuggestion.style.display = 'block';
+      } else {
+        customSuggestion.style.display = 'none';
+      }
+    });
+
+    // Etapa 1: Responder à primeira pergunta
+    document.getElementById("form-step-1").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      userResponses.invite = formData.get("invite");
+
+      if (userResponses.invite === "Sim") {
+        showStep(2);
+      } else {
+        hideAllAndShowMessage("Tudo bem, Gio. Deixa para a próxima! 😊");
+      }
+    });
+
+    // Etapa 2: Responder à segunda pergunta
+    document.getElementById("form-step-2").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      userResponses.location = formData.get("location");
+
+      if (userResponses.location === "Outro") {
+        userResponses.customSuggestion = formData.get("customSuggestion");
+      }
+
+      showStep(3);
+    });
+
+    // Etapa 3: Responder à terceira pergunta e redirecionar para o WhatsApp
+    document.getElementById("form-step-3").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      userResponses.date = formData.get("date");
+
+      // Formatar a mensagem para o WhatsApp
+      const message = `
+        Olá! Aqui estão as respostas para o convite:
+        - Convite: ${userResponses.invite}
+        - Local: ${userResponses.location}${userResponses.customSuggestion ? ` (${userResponses.customSuggestion})` : ""}
+        - Data: ${userResponses.date}
+      `;
+
+      // Redirecionar para o WhatsApp
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      window.location.href = whatsappUrl;
+    });
+
+    // Manipular bloqueio de datas específicas e intervalo
+    document.addEventListener("DOMContentLoaded", function () {
+      const dateInput = document.getElementById("date-input");
+
+      // Função para bloquear o dia 22/12
+      dateInput.addEventListener("input", function (event) {
+        const selectedDate = new Date(event.target.value);
+        const blockedDate = new Date("2025-12-22");
+
+        if (
+          selectedDate.getFullYear() === blockedDate.getFullYear() &&
+          selectedDate.getMonth() === blockedDate.getMonth() &&
+          selectedDate.getDate() === blockedDate.getDate()
+        ) {
+          alert("O dia 22/12 está bloqueado! Escolha outra data.");
+          event.target.value = ""; // Limpa a data selecionada
+        }
+      });
+
+      // Definir a data mínima como a data atual
+      const today = new Date().toISOString().split("T")[0];
+      dateInput.setAttribute("min", today);
+    });
+  </script>
+</body>
+</html>

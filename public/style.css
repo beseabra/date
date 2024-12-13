@@ -1,0 +1,66 @@
+/* Centraliza todo o conteúdo na página */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+/* Estilo para as etapas */
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Estilo para imagens */
+img {
+  max-width: 100%;
+  height: auto;
+  margin: 20px 0;
+}
+
+/* Botões e inputs */
+form button,
+form input,
+form select {
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Botão ao passar o mouse */
+form button:hover {
+  background-color: #007bff;
+  color: white;
+  border-color: #0056b3;
+}
+
+/* Mensagem romântica */
+.romantic-message {
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-bottom: 20px;
+  color: #555;
+}
+.image {
+  height: auto;
+  max-height: 600px;
+}
+.button {
+  margin-bottom: 20px;
+}
+
+/* Para os títulos */
+h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
